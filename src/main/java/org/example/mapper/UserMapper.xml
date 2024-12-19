@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.UserMapper">
+    <!--登录-->
+    <select id="login" parameterType="org.example.pojo.User" resultType="org.example.pojo.User">
+        select * from user where userName=#{userName} and userPassword=#{userPassword}
+    </select>
+
+    <!--条件+分页模糊查询 分页pageHelper实现 在sql语句中就不用添加limit-->
+    <select id="selectByPage" parameterType="String" resultType="org.example.pojo.User">
+        select * from user
+        <include refid="likeByPage"></include>
+    </select>
+    <sql id="likeByPage">
+        <where>
+            <if test="name!=null and name!=''">
+                and userName like concat('%',#{name},'%')
+            </if>
+        </where>
+    </sql>
+
+    <!--根据id查询用户-->
+    <select id="selectById" parameterType="int"
+            resultType="org.example.pojo.User">
+        select * from user where userId=#{id}
+    </select>
+
+    <!--修改的方法-->
+    <update id="updateById" parameterType="org.example.pojo.User">
+        update user set userName=#{userName},userSex=#{userSex},
+                        userAge=#{userAge},userTel=#{userTel},
+                        userLoc=#{userLoc},userRole=#{userRole}
+        where userId=#{userId}
+    </update>
+</mapper>
